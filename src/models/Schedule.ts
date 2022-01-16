@@ -8,4 +8,6 @@ const ScheduleSchema = new mongoose.Schema({
     }
 });
 
+ScheduleSchema.index({ sendAt: 1 }, { expireAfterSeconds: 0 });
+
 export default mongoose.model<ISchedule & mongoose.Document>("Schedule", ScheduleSchema);
