@@ -6,6 +6,10 @@ const ReminderSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
+    contentId: {
+        type: Number,
+        required: true
+    },
     ogTitle: {
         type: String,
         required: true
