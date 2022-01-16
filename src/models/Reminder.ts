@@ -1,0 +1,23 @@
+import mongoose from "mongoose";
+import { IReminder } from "../interfaces/IReminder";
+
+const ReminderSchema = new mongoose.Schema({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    ogTitle: {
+        type: String,
+        required: true
+    },
+    ogImage: {
+        type: String,
+        required: true
+    },
+    time: {
+        type: Date,
+        required: true
+    },
+});
+
+export default mongoose.model<IReminder & mongoose.Document>("Reminder", ReminderSchema);
