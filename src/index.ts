@@ -2,10 +2,11 @@ import express from "express";
 const app = express(); 
 import connectDB from "./Loaders/db";
 import routes from './routes';
+require('dotenv').config();
 
 connectDB();
 
-app.use(express.urlencoded);
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());  
 
 app.use(routes);   //라우터 
@@ -21,10 +22,10 @@ app.use(function (err, req, res, next) {
 });
 
 app 
-  .listen(5000, () => {
+  .listen(process.env.PORT, () => {
     console.log(`
     ################################################
-    🛡️  Server listening on port: 5000 🛡️
+          🛡️  Server listening on port 🛡️
     ################################################
   `);
   })
