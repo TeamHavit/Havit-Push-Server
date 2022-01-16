@@ -4,6 +4,9 @@ module.exports = {
     // 회원가입
     CREATED_USER: '유저 등록 성공',
 
+    // 알림
+    CREATED_REMINDER: '알림 등록 성공',
+    
     // 서버 내 오류
     INTERNAL_SERVER_ERROR: '서버 내 오류',
 };
