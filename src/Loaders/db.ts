@@ -1,14 +1,53 @@
 import mongoose from "mongoose";
 import config from "../config"; 
+import Schedule from "../models/Schedule";
+import Reminder from "../models/Reminder";
+import * as admin from "firebase-admin";
+const _ = require('lodash');
+const serviceAccount = require('../config/fcm-admin-credentials.json');
+const titles = require('../modules/titleArray');
 
 const connectDB = async () => {
+  let firebase;
   try {
+    if(admin.apps.length === 0) {
+      firebase = admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount),
+      });
+    } else {
+      firebase = admin.app();
+    }
     await mongoose.connect(config.mongoURI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
 
     console.log("Mongoose Connected ...");
+    
+    Schedule.watch([{ $match: { operationType: 'delete' } }]).on('change', async (data) => {
+      const id = data.documentKey._id;
+      const reminder = await Reminder.findOne({ _id: id }).populate({ path: 'userId', select: { fcmToken: 1 } });
+      const randomTitle = _.shuffle(titles)[0];
+      
+      let message = {
+        notification: {
+          title: randomTitle as string,
+          body: reminder.ogTitle as string,
+          image: reminder.ogImage as string
+        },
+        token: reminder.userId.fcmToken,
+      };
+      admin
+        .messaging()
+        .send(message)
+        .then(function (response) {
+          console.log('Successfully sent message: : ', response)
+        })
+        .catch(function (err) {
+          console.log('Error Sending message!!! : ', err)
+        })
+
+    });
   } catch (err) {
     console.error(err.message);
     process.exit(1);
