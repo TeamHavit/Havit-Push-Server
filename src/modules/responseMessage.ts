@@ -8,6 +8,7 @@ module.exports = {
     // 알림
     CREATED_REMINDER: '알림 등록 성공',
     UPDATED_REMINDER: '알림 수정 성공',
+    DELETED_REMINDER: '알림 삭제 성공',
 
     // 서버 내 오류
     INTERNAL_SERVER_ERROR: '서버 내 오류',
