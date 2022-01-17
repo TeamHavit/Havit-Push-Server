@@ -22,6 +22,27 @@ const createReminder = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ *  @route PATCH /reminder
+ *  @desc Modify reminder time
+ *  @access Public
+ */
+const modifyReminder = async (req: Request, res: Response) => {
+    const { contentId, time } = req.body;
+    try {
+        const updatedReminder = await reminderService.updateReminder({ contentId, time });
+        if (!updatedReminder) {
+            return res.status(sc.NOT_FOUND).send(util.fail(sc.NOT_FOUND, responseMessage.NOT_FOUND));
+        }
+        const updatedSchedule = await scheduleService.updateSchedule({ _id: updatedReminder._id, sendAt: updatedReminder.time });
+        res.status(sc.OK).send(util.success(sc.OK, responseMessage.UPDATED_REMINDER));
+    } catch (error) {
+        console.log(error);
+        res.status(sc.INTERNAL_SERVER_ERROR).send(util.fail(sc.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));
+    }
+};
+
 export default {
-    createReminder
+    createReminder,
+    modifyReminder
 }
