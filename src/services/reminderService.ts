@@ -1,5 +1,5 @@
 import Reminder from "../models/Reminder";
-import { IReminder, IReminderUpdateDTO } from "../interfaces/IReminder";
+import { IReminder, IReminderDeleteDTO, IReminderUpdateDTO } from "../interfaces/IReminder";
 import mongoose from "mongoose";
 
 const createReminder = async (data: IReminder) => {
@@ -32,7 +32,19 @@ const updateReminder = async (data: IReminderUpdateDTO) => {
     }
 } 
 
+const deleteReminder = async (data: IReminderDeleteDTO) => {
+    const { contentId } = data;
+    try {
+       const deletedReminder = await Reminder.findOneAndRemove({ contentId });
+       return deletedReminder;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+};
+
 export default {
     createReminder,
-    updateReminder
+    updateReminder,
+    deleteReminder
 }

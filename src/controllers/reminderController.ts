@@ -4,7 +4,6 @@ const sc = require('../modules/statusCode');
 const util = require('../modules/util');
 const responseMessage = require('../modules/responseMessage');
 
-
 /**
  *  @route POST /reminder
  *  @desc add reminder
@@ -42,7 +41,29 @@ const modifyReminder = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ *  @route DELETE /reminder/:contentId
+ *  @desc Delete reminder
+ *  @access Public
+ */
+const deleteReminder = async (req: Request, res: Response) => {
+    const id = req.params.contentId;
+    const contentId = +id;
+    try {
+        const deletedReminder = await reminderService.deleteReminder({ contentId });
+        if (!deleteReminder) {
+            return res.status(sc.NOT_FOUND).send(util.fail(sc.NOT_FOUND, responseMessage.NOT_FOUND));
+        }
+        const deletedSchedule = await scheduleService.deleteSchedule({ _id: deletedReminder._id });
+        res.status(sc.OK).send(util.success(sc.OK, responseMessage.DELETED_REMINDER));
+    } catch (error) {
+        console.log(error);
+        res.status(sc.INTERNAL_SERVER_ERROR).send(util.fail(sc.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));
+    }
+};
+
 export default {
     createReminder,
-    modifyReminder
+    modifyReminder,
+    deleteReminder
 }
