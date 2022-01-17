@@ -12,3 +12,7 @@ export interface IReminderUpdateDTO {
     contentId: Number;
     time: Date;
 }
+
+export interface IReminderDeleteDTO {
+    contentId: Number;
+}
