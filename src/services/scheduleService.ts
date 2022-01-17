@@ -1,11 +1,11 @@
 import Schedule from "../models/Schedule";
-import { ISchedule } from "../interfaces/ISchedule";
+import { ISchedule, IScheduleDeleteDTO } from "../interfaces/ISchedule";
 
 const createSchedule = async (data: ISchedule) => {
     const { _id, sendAt } = data;
     try {
         await Schedule.create({
-            _id, sendAt
+            _id, sendAt, isDeleted: false
         });
     } catch (error) {
         console.log(error);
@@ -24,7 +24,19 @@ const updateSchedule = async (data: ISchedule) => {
     }
 };
 
+const deleteSchedule = async (data: IScheduleDeleteDTO) => {
+    const { _id } = data;
+    try {
+        const deletedSchedule = await Schedule.findOneAndUpdate({ _id }, { isDeleted: true });
+        return deletedSchedule;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+};
+
 export default {
     createSchedule,
-    updateSchedule
+    updateSchedule,
+    deleteSchedule
 }

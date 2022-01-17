@@ -24,7 +24,7 @@ const connectDB = async () => {
 
     console.log("Mongoose Connected ...");
     
-    Schedule.watch([{ $match: { operationType: 'delete' } }]).on('change', async (data) => {
+    Schedule.watch([{ $match: { $and:[ { operationType: 'delete' }, { isDeleted: false } ] } }]).on('change', async (data) => {
       const id = data.documentKey._id;
       const reminder = await Reminder.findOne({ _id: id }).populate({ path: 'userId', select: { fcmToken: 1 } });
       const randomTitle = _.shuffle(titles)[0];

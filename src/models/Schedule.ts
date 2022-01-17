@@ -5,6 +5,10 @@ const ScheduleSchema = new mongoose.Schema({
     sendAt: {
         type: Date,
         required: true
+    },
+    isDeleted: {
+        type: Boolean,
+        required: true
     }
 });
 
