@@ -7,3 +7,8 @@ export interface IReminder {
     ogImage: String;
     time: Date;
 }
+
+export interface IReminderUpdateDTO {
+    contentId: Number;
+    time: Date;
+}
