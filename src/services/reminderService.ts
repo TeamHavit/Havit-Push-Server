@@ -3,7 +3,7 @@ import { IReminder, IReminderDeleteDTO, IReminderUpdateDTO } from "../interfaces
 import mongoose from "mongoose";
 
 const createReminder = async (data: IReminder) => {
-    const { time, userId, contentId, ogTitle, ogImage } = data;
+    const { time, userId, contentId, ogTitle, ogImage, url } = data;
     const scheduleTime = time;
     try {
         const reminder = await Reminder.create({
@@ -11,7 +11,8 @@ const createReminder = async (data: IReminder) => {
             userId,
             contentId,
             ogTitle,
-            ogImage
+            ogImage,
+            url,
         });
         return reminder;
     } catch (error) {
