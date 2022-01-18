@@ -16,7 +16,7 @@ const registerUser = async (req: Request, res: Response) => {
     }
     try {
         const user = await userService.createUser({ fcmToken });
-        res.status(sc.OK).send(util.success(sc.OK, responseMessage.CREATED_USER, user));
+        res.status(sc.CREATED).send(util.success(sc.CREATED, responseMessage.CREATED_USER, user));
     } catch (error) {
         console.log(error);
         res.status(sc.INTERNAL_SERVER_ERROR).send(util.fail(sc.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));
