@@ -5,6 +5,7 @@ export interface IReminder {
     contentId: Number;
     ogTitle: String;
     ogImage: String;
+    url: String;
     time: Date;
 }
 
