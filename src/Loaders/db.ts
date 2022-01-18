@@ -24,16 +24,18 @@ const connectDB = async () => {
 
     console.log("Mongoose Connected ...");
     
-    Schedule.watch([{ $match: { $and:[ { operationType: 'delete' }, { isDeleted: false } ] } }]).on('change', async (data) => {
+    // 삭제 매칭 코드 뺌
+    Schedule.watch([{ $match: { operationType: 'delete' } }]).on('change', async (data) => {
       const id = data.documentKey._id;
       const reminder = await Reminder.findOne({ _id: id }).populate({ path: 'userId', select: { fcmToken: 1 } });
       const randomTitle = _.shuffle(titles)[0];
       
       let message = {
-        notification: {
+        data: {
           title: randomTitle as string,
           body: reminder.ogTitle as string,
-          image: reminder.ogImage as string
+          image: reminder.ogImage as string,
+          url: reminder.url as string
         },
         token: reminder.userId.fcmToken,
       };

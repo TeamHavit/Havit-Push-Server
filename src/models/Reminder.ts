@@ -18,6 +18,10 @@ const ReminderSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    url: {
+        type: String,
+        required: true
+    },
     time: {
         type: Date,
         required: true

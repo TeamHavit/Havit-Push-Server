@@ -10,11 +10,11 @@ const responseMessage = require('../modules/responseMessage');
  *  @access Public
  */
 const createReminder = async (req: Request, res: Response) => {
-    const { time, userId, contentId, ogTitle, ogImage } = req.body;
+    const { time, userId, contentId, ogTitle, ogImage, url } = req.body;
     try {
-        const reminder = await reminderService.createReminder({ time, userId, contentId, ogTitle, ogImage });
+        const reminder = await reminderService.createReminder({ time, userId, contentId, ogTitle, ogImage, url });
         await scheduleService.createSchedule({ _id: reminder._id, sendAt: reminder.time });
-        res.status(sc.OK).send(util.success(sc.OK, responseMessage.CREATED_REMINDER));
+        res.status(sc.CREATED).send(util.success(sc.CREATED, responseMessage.CREATED_REMINDER));
     } catch (error) {
         console.log(error);
         res.status(sc.INTERNAL_SERVER_ERROR).send(util.fail(sc.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));
