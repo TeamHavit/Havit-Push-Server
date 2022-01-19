@@ -3,6 +3,8 @@ import config from "../config";
 import Schedule from "../models/Schedule";
 import Reminder from "../models/Reminder";
 import * as admin from "firebase-admin";
+import { ChangeStream } from "mongodb";
+import { ISchedule } from "../interfaces/ISchedule";
 const _ = require('lodash');
 const serviceAccount = require('../config/fcm-admin-credentials.json');
 const titles = require('../modules/titleArray');
@@ -25,11 +27,13 @@ const connectDB = async () => {
     console.log("Mongoose Connected ...");
     
     // 삭제 매칭 코드 뺌
-    Schedule.watch([{ $match: { operationType: 'delete' } }]).on('change', async (data) => {
-      const id = data.documentKey._id;
-      const reminder = await Reminder.findOne({ _id: id }).populate({ path: 'userId', select: { fcmToken: 1 } });
-      const randomTitle = _.shuffle(titles)[0];
+    const changeStream = Schedule.watch([{ $match: { operationType: 'delete' } }]);
+    changeStream.on('change', async (data) => {
+      const id = data['documentKey']._id;
+      const reminder = await Reminder.findOne({ _id: id }).populate({ path: 'userId', select: { fcmToken: 1, isDeleted: 1 } });
+      if (reminder.userId['isDeleted']) return; // 삭제된 스케줄
       
+      const randomTitle = _.shuffle(titles)[0];
       let message = {
         data: {
           title: randomTitle as string,
@@ -37,7 +41,7 @@ const connectDB = async () => {
           image: reminder.ogImage as string,
           url: reminder.url as string
         },
-        token: reminder.userId.fcmToken,
+        token: reminder.userId['fcmToken'],
       };
       admin
         .messaging()
