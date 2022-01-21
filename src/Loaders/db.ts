@@ -30,8 +30,7 @@ const connectDB = async () => {
     const changeStream = Schedule.watch([{ $match: { operationType: 'delete' } }]);
     changeStream.on('change', async (data) => {
       const id = data['documentKey']._id;
-      const reminder = await Reminder.findOne({ _id: id }).populate({ path: 'userId', select: { fcmToken: 1, isDeleted: 1 } });
-      if (reminder.userId['isDeleted']) return; // 삭제된 스케줄
+      const reminder = await Reminder.findOne({ _id: id }).populate({ path: 'userId', select: { fcmToken: 1 } });
       
       const randomTitle = _.shuffle(titles)[0];
       let message = {
