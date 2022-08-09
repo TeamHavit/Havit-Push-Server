@@ -1,10 +1,10 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 export interface ISchedule {
-    _id: mongoose.Schema.Types.ObjectId;
-    sendAt: Date;
+  _id: mongoose.Schema.Types.ObjectId;
+  sendAt: Date;
 }
 
 export interface IScheduleDeleteDTO {
-    _id: mongoose.Schema.Types.ObjectId;
+  _id: mongoose.Schema.Types.ObjectId;
 }

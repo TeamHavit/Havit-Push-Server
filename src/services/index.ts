@@ -1,10 +1,6 @@
-import userService from "./userService";
-import reminderService from "./reminderService";
-import scheduleService from "./scheduleService";
+import userService from './userService';
+import reminderService from './reminderService';
+import scheduleService from './scheduleService';
 
 //service index file
-export {
-    userService,
-    reminderService,
-    scheduleService
-}
+export { userService, reminderService, scheduleService };

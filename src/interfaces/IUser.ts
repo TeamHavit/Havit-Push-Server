@@ -1,7 +1,5 @@
 export interface IUser {
-    fcmToken: String;
+  fcmToken: String;
 }
 
-export interface UserTokenUpdateDto extends IUser {
-
-}
+export interface UserTokenUpdateDto extends IUser {}
