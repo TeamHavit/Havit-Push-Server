@@ -1,6 +1,6 @@
-import express, { Request, Response } from "express";
-import { UserTokenUpdateDto } from "../interfaces/IUser";
-import { userService } from "../services";
+import express, { Request, Response } from 'express';
+import { UserTokenUpdateDto } from '../interfaces/IUser';
+import { userService } from '../services';
 const sc = require('../modules/statusCode');
 const util = require('../modules/util');
 const responseMessage = require('../modules/responseMessage');
@@ -11,17 +11,28 @@ const responseMessage = require('../modules/responseMessage');
  *  @access Public
  */
 const registerUser = async (req: Request, res: Response) => {
-    const { fcmToken } = req.body;
-    if (!fcmToken) {
-        return res.status(sc.BAD_REQUEST).send(util.fail(sc.BAD_REQUEST, responseMessage.NULL_VALUE));
-    }
-    try {
-        const user = await userService.createUser({ fcmToken });
-        res.status(sc.CREATED).send(util.success(sc.CREATED, responseMessage.CREATED_USER, user));
-    } catch (error) {
-        console.log(error);
-        res.status(sc.INTERNAL_SERVER_ERROR).send(util.fail(sc.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));
-    }
+  const { fcmToken } = req.body;
+  if (!fcmToken) {
+    return res
+      .status(sc.BAD_REQUEST)
+      .send(util.fail(sc.BAD_REQUEST, responseMessage.NULL_VALUE));
+  }
+  try {
+    const user = await userService.createUser({ fcmToken });
+    res
+      .status(sc.CREATED)
+      .send(util.success(sc.CREATED, responseMessage.CREATED_USER, user));
+  } catch (error) {
+    console.log(error);
+    res
+      .status(sc.INTERNAL_SERVER_ERROR)
+      .send(
+        util.fail(
+          sc.INTERNAL_SERVER_ERROR,
+          responseMessage.INTERNAL_SERVER_ERROR,
+        ),
+      );
+  }
 };
 
 /**
@@ -30,23 +41,35 @@ const registerUser = async (req: Request, res: Response) => {
  *  @access Public
  */
 const updateUserToken = async (req: Request, res: Response) => {
-    const userTokenUpdateDto: UserTokenUpdateDto = req.body;
-    const { userId } = req.params;
+  const userTokenUpdateDto: UserTokenUpdateDto = req.body;
+  const { userId } = req.params;
 
-    try {
-        const updatedToken = await userService.updateUserToken(userId, userTokenUpdateDto);
-        if (!updatedToken) {
-            return res.status(sc.NOT_FOUND).send(util.fail(sc.NOT_FOUND, responseMessage.NOT_FOUND));
-        }
-
-        res.status(sc.NO_CONTENT).send();
-    } catch (error) {
-        console.log(error);
-        res.status(sc.INTERNAL_SERVER_ERROR).send(util.fail(sc.INTERNAL_SERVER_ERROR, responseMessage.INTERNAL_SERVER_ERROR));
+  try {
+    const updatedToken = await userService.updateUserToken(
+      userId,
+      userTokenUpdateDto,
+    );
+    if (!updatedToken) {
+      return res
+        .status(sc.NOT_FOUND)
+        .send(util.fail(sc.NOT_FOUND, responseMessage.NOT_FOUND));
     }
-}
+
+    res.status(sc.NO_CONTENT).send();
+  } catch (error) {
+    console.log(error);
+    res
+      .status(sc.INTERNAL_SERVER_ERROR)
+      .send(
+        util.fail(
+          sc.INTERNAL_SERVER_ERROR,
+          responseMessage.INTERNAL_SERVER_ERROR,
+        ),
+      );
+  }
+};
 
 export default {
-    registerUser,
-    updateUserToken
+  registerUser,
+  updateUserToken,
 };

@@ -1,12 +1,12 @@
-import mongoose from "mongoose";
-import { IUser } from "../interfaces/IUser";
+import mongoose from 'mongoose';
+import { IUser } from '../interfaces/IUser';
 
 const UserSchema = new mongoose.Schema({
-    fcmToken: {
-        type: String,
-        required: true,
-        unique: true,
-    }
+  fcmToken: {
+    type: String,
+    required: true,
+    unique: true,
+  },
 });
 
-export default mongoose.model<IUser & mongoose.Document>("User", UserSchema);
+export default mongoose.model<IUser & mongoose.Document>('User', UserSchema);

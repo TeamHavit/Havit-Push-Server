@@ -1,8 +1,5 @@
-import userController from "./userController";
-import reminderController from "./reminderController";
+import userController from './userController';
+import reminderController from './reminderController';
 
 // controller index file
-export {
-    userController,
-    reminderController
-}
+export { userController, reminderController };
