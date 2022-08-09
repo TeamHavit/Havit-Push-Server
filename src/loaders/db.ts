@@ -3,8 +3,7 @@ import config from '../config';
 import Schedule from '../models/Schedule';
 import Reminder from '../models/Reminder';
 import * as admin from 'firebase-admin';
-import { ChangeStream } from 'mongodb';
-import { ISchedule } from '../interfaces/ISchedule';
+import { reminderService } from '../services';
 const _ = require('lodash');
 const serviceAccount = require('../config/fcm-admin-credentials.json');
 const titles = require('../modules/titleArray');
@@ -26,16 +25,20 @@ const connectDB = async () => {
 
     console.log('Mongoose Connected ...');
 
-    // 삭제 매칭 코드 뺌
     const changeStream = Schedule.watch([
       { $match: { operationType: 'delete' } },
     ]);
     changeStream.on('change', async (data) => {
       const id = data['documentKey']._id;
+
+      if (data['documentKey'].isDeleted) return;
+
       const reminder = await Reminder.findOne({ _id: id }).populate({
         path: 'userId',
         select: { fcmToken: 1 },
       });
+
+      if (!reminder) return;
 
       const randomTitle = _.shuffle(titles)[0];
       let message = {
@@ -47,6 +50,11 @@ const connectDB = async () => {
         },
         token: reminder.userId['fcmToken'],
       };
+
+      const deletedReminder = await reminderService.deleteReminder({
+        contentId: reminder.contentId,
+      });
+
       admin
         .messaging()
         .send(message)
