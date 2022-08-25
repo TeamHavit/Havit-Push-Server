@@ -3,8 +3,9 @@ import {
   IReminder,
   IReminderDeleteDTO,
   IReminderUpdateDTO,
+  ReminderTitleUpdateDto,
 } from '../interfaces/IReminder';
-import mongoose from 'mongoose';
+import mongoose, { isValidObjectId } from 'mongoose';
 
 const createReminder = async (data: IReminder) => {
   const { time, userId, contentId, ogTitle, ogImage, url } = data;
@@ -41,6 +42,26 @@ const updateReminder = async (data: IReminderUpdateDTO) => {
   }
 };
 
+const updateReminderTitle = async (
+  data: ReminderTitleUpdateDto,
+): Promise<IReminder | null> => {
+  try {
+    const reminder = await Reminder.findOne({ contentId: data.contentId });
+    if (!reminder) return null;
+
+    const updatedReminder = await Reminder.findOneAndUpdate(
+      { contentId: data.contentId },
+      { ogTitle: data.ogTitle },
+      { new: true },
+    );
+
+    return updatedReminder;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 const deleteReminder = async (data: IReminderDeleteDTO) => {
   const { contentId } = data;
   try {
@@ -55,5 +76,6 @@ const deleteReminder = async (data: IReminderDeleteDTO) => {
 export default {
   createReminder,
   updateReminder,
+  updateReminderTitle,
   deleteReminder,
 };
