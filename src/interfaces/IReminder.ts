@@ -14,6 +14,11 @@ export interface IReminderUpdateDTO {
   time: Date;
 }
 
+export interface ReminderTitleUpdateDto {
+  contentId: Number;
+  ogTitle: string;
+}
+
 export interface IReminderDeleteDTO {
   contentId: Number;
 }
