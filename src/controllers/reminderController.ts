@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import { ReminderTitleUpdateDto } from '../interfaces/IReminder';
 import { scheduleService, reminderService } from '../services';
 const sc = require('../modules/statusCode');
 const util = require('../modules/util');
@@ -78,6 +79,37 @@ const modifyReminder = async (req: Request, res: Response) => {
 };
 
 /**
+ *  @route PATCH /reminder
+ *  @desc Modify reminder time
+ *  @access Public
+ */
+const modifyTitle = async (req: Request, res: Response) => {
+  const reminderTitleUpdateDto: ReminderTitleUpdateDto = req.body;
+
+  try {
+    const updatedReminder = await reminderService.updateReminderTitle(
+      reminderTitleUpdateDto,
+    );
+    if (!updatedReminder)
+      return res
+        .status(sc.NOT_FOUND)
+        .send(util.fail(sc.NOT_FOUND, responseMessage.NOT_FOUND));
+
+    return res.status(sc.NO_CONTENT).send();
+  } catch (error) {
+    console.log(error);
+    res
+      .status(sc.INTERNAL_SERVER_ERROR)
+      .send(
+        util.fail(
+          sc.INTERNAL_SERVER_ERROR,
+          responseMessage.INTERNAL_SERVER_ERROR,
+        ),
+      );
+  }
+};
+
+/**
  *  @route DELETE /reminder/:contentId
  *  @desc Delete reminder
  *  @access Public
@@ -114,5 +146,6 @@ const deleteReminder = async (req: Request, res: Response) => {
 export default {
   createReminder,
   modifyReminder,
+  modifyTitle,
   deleteReminder,
 };
