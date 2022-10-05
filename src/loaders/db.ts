@@ -48,6 +48,16 @@ const connectDB = async () => {
           image: reminder.ogImage as string,
           url: reminder.url as string,
         },
+        apns: {
+          payload: {
+            aps: {
+              'mutable-content': 1,
+            },
+          },
+          fcm_options: {
+            image: reminder.ogImage as string,
+          },
+        },
         token: reminder.userId['fcmToken'],
       };
 
