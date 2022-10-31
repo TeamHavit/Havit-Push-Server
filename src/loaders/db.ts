@@ -56,6 +56,9 @@ const connectDB = async () => {
           },
           fcm_options: {
             image: reminder.ogImage as string,
+            title: randomTitle as string,
+            body: reminder.ogTitle as string,
+            url: reminder.url as string,
           },
         },
         token: reminder.userId['fcmToken'],
