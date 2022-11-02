@@ -8,7 +8,7 @@ import {
 import mongoose, { isValidObjectId } from 'mongoose';
 
 const createReminder = async (data: IReminder) => {
-  const { time, userId, contentId, ogTitle, ogImage, url } = data;
+  const { time, userId, contentId, ogTitle, ogImage, url, isSeen } = data;
   const scheduleTime = time;
   try {
     const reminder = await Reminder.create({
@@ -18,6 +18,7 @@ const createReminder = async (data: IReminder) => {
       ogTitle,
       ogImage,
       url,
+      isSeen,
     });
     return reminder;
   } catch (error) {
