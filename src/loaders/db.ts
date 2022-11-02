@@ -48,6 +48,8 @@ const connectDB = async () => {
           body: reminder.ogTitle as string,
           image: reminder.ogImage as string,
           url: reminder.url as string,
+          contentId: reminder.contentId.toString(),
+          isSeen: reminder.isSeen.toString(),
         },
         apns: {
           payload: {
@@ -56,6 +58,8 @@ const connectDB = async () => {
                 title: randomTitle as string,
                 body: reminder.ogTitle as string,
                 url: reminder.url as string,
+                contentId: reminder.contentId.toString(),
+                isSeen: reminder.isSeen.toString(),
               },
               category: 'havit',
               'thread-id': '5280',

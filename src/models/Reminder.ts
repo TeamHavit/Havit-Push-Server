@@ -22,6 +22,10 @@ const ReminderSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  isSeen: {
+    type: Boolean,
+    required: true,
+  },
   time: {
     type: Date,
     required: true,

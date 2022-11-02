@@ -6,6 +6,7 @@ export interface IReminder {
   ogTitle: String;
   ogImage: String;
   url: String;
+  isSeen: Boolean;
   time: Date;
 }
 

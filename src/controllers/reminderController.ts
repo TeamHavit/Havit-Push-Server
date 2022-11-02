@@ -11,7 +11,7 @@ const responseMessage = require('../modules/responseMessage');
  *  @access Public
  */
 const createReminder = async (req: Request, res: Response) => {
-  const { time, userId, contentId, ogTitle, ogImage, url } = req.body;
+  const { time, userId, contentId, ogTitle, ogImage, url, isSeen } = req.body;
   try {
     const reminder = await reminderService.createReminder({
       time,
@@ -19,8 +19,10 @@ const createReminder = async (req: Request, res: Response) => {
       contentId,
       ogTitle,
       ogImage,
+      isSeen,
       url,
     });
+
     await scheduleService.createSchedule({
       _id: reminder._id,
       sendAt: reminder.time,
