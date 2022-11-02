@@ -41,6 +41,7 @@ const connectDB = async () => {
       if (!reminder) return;
 
       const randomTitle = _.shuffle(titles)[0];
+
       let message = {
         data: {
           title: randomTitle as string,
@@ -51,14 +52,19 @@ const connectDB = async () => {
         apns: {
           payload: {
             aps: {
+              alert: {
+                title: randomTitle as string,
+                body: reminder.ogTitle as string,
+                url: reminder.url as string,
+              },
+              category: 'havit',
+              'thread-id': '5280',
               'mutable-content': 1,
             },
           },
+
           fcm_options: {
             image: reminder.ogImage as string,
-            title: randomTitle as string,
-            body: reminder.ogTitle as string,
-            url: reminder.url as string,
           },
         },
         token: reminder.userId['fcmToken'],
