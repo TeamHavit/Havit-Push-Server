@@ -1,0 +1,10 @@
+version: '3'
+services:
+  deploy:
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '80:8081'

@@ -12,4 +12,7 @@ module.exports = {
 
   // 서버 내 오류
   INTERNAL_SERVER_ERROR: '서버 내 오류',
+
+  // health check
+  HEALTH_STATUS_SUCCESS: '서버 상태 정상',
 };
