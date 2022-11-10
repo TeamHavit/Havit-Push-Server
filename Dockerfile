@@ -4,7 +4,7 @@ WORKDIR /usr
 
 COPY package*.json ./
 
-RUN npm install -g yarn && yarn
+RUN yarn
 
 ADD . .
 
