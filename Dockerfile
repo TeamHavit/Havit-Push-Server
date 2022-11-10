@@ -4,10 +4,10 @@ WORKDIR /usr
 
 COPY package*.json ./
 
-RUN yarn
+RUN npm install -g typescript && yarn
 
 ADD . .
 
 EXPOSE 8081
 
-CMD ["yarn start"]
+CMD ["yarn", "start"]
