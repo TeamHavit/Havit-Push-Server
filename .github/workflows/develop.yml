@@ -47,7 +47,7 @@ jobs:
         with:
           name: 'fcm-admin-credentials.json'
           json: ${{ secrets.FIREBASE_JSON }}
-          dir: 'src/config/'
+          dir: 'src/'
 
       - name: Install dependencies
         run: yarn

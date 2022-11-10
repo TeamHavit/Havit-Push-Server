@@ -5,15 +5,19 @@ import Reminder from '../models/Reminder';
 import * as admin from 'firebase-admin';
 import { reminderService } from '../services';
 const _ = require('lodash');
-const serviceAccount = require('../config/fcm-admin-credentials.json');
+
+import { ServiceAccount } from 'firebase-admin';
+import serviceAccount from '../fcm-admin-credentials.json';
+
 const titles = require('../modules/titleArray');
 
 const connectDB = async () => {
   let firebase;
+  const serAccount: ServiceAccount = serviceAccount as ServiceAccount;
   try {
     if (admin.apps.length === 0) {
       firebase = admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount),
+        credential: admin.credential.cert(serAccount),
       });
     } else {
       firebase = admin.app();
