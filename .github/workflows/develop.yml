@@ -43,7 +43,7 @@ jobs:
 
       - name: create-json
         id: create-json
-        uses: jsdaniell/create-json@1.1.2
+        uses: jsdaniell/create-json@1.2.1
         with:
           name: 'fcm-admin-credentials.json'
           json: ${{ secrets.FIREBASE_JSON }}
