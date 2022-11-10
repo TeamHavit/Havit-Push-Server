@@ -10,4 +10,4 @@ ADD . .
 
 EXPOSE 8081
 
-CMD ["yarn", "start"]
+CMD ["node", "dist"]
