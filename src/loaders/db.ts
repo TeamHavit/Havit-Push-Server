@@ -5,7 +5,7 @@ import Reminder from '../models/Reminder';
 import * as admin from 'firebase-admin';
 import { reminderService } from '../services';
 const _ = require('lodash');
-const serviceAccount = require('../fcm-admin-credentials.json');
+const serviceAccount = require('../config/fcm-admin-credentials.json');
 const titles = require('../modules/titleArray');
 
 const connectDB = async () => {

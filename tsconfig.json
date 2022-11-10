@@ -10,6 +10,7 @@
     "module": "commonjs",
     "pretty": true,
     "sourceMap": true,
+    "resolveJsonModule": true,
     "outDir": "./dist",
     "allowJs": true,
     "noEmit": false,
