@@ -10,10 +10,12 @@ COPY package*.json ./
 
 RUN npm install -g typescript
 
+RUN npm install -g cross-env
+
 RUN yarn
 
 ADD . .
 
 EXPOSE 8081
 
-ENTRYPOINT ["/usr/app/node_modules/.bin/cross-env", "NODE_ENV=development", "node", "dist"]
+ENTRYPOINT ["cross-env", "NODE_ENV=${NODE_ENV}", "node", "dist"]
