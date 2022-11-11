@@ -4,7 +4,7 @@ FROM node:16
 
 ARG NODE_ENV
 
-WORKDIR /usr
+WORKDIR /usr/app
 
 COPY package*.json ./
 
@@ -14,4 +14,4 @@ ADD . .
 
 EXPOSE 8081
 
-ENTRYPOINT ["/usr/node_modules/.bin/cross-env", "NODE_ENV=${NODE_ENV}", "node", "dist"]
+ENTRYPOINT ["/usr/app/node_modules/.bin/cross-env", "NODE_ENV=${NODE_ENV}", "node", "dist"]
