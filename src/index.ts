@@ -25,6 +25,7 @@ app
     console.log(`
     ################################################
           🛡️  Server listening on port 🛡️
+        🚀 deploy environment - ${process.env.NODE_ENV} 🚀
     ################################################
   `);
   })
