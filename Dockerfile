@@ -12,10 +12,12 @@ RUN npm install -g typescript
 
 RUN npm install -g cross-env
 
-RUN yarn && echo ${NODE_ENV}
+RUN npm install -g nodemon
+
+RUN yarn
 
 ADD . .
 
 EXPOSE 8081
 
-ENTRYPOINT ["cross-env", "NODE_ENV=${NODE_ENV}", "node", "dist"]
+ENTRYPOINT ["yarn", "start:dev"]
