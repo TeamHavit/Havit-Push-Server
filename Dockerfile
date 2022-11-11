@@ -16,4 +16,4 @@ ADD . .
 
 EXPOSE 8081
 
-ENTRYPOINT ["/usr/app/node_modules/.bin/cross-env", "NODE_ENV=${NODE_ENV}", "node", "dist"]
+ENTRYPOINT ["/usr/app/node_modules/.bin/cross-env", "NODE_ENV=development", "node", "dist"]
