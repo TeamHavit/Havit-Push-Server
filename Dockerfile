@@ -12,7 +12,7 @@ RUN npm install -g typescript
 
 RUN npm install -g cross-env
 
-RUN yarn
+RUN yarn && echo ${NODE_ENV}
 
 ADD . .
 
