@@ -53,7 +53,7 @@ jobs:
         run: yarn build
 
       - name: Build the Docker image
-        run: docker build --build-arg NODE_ENV="development" -t havit/havit-server-dev -f Dockerfile .
+        run: docker build -t havit/havit-server-dev -f Dockerfile.dev .
 
       - name: Generate Deployment Package
         run: zip -r deploy.zip *
