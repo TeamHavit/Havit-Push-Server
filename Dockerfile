@@ -1,4 +1,8 @@
+ARG NODE_ENV
+
 FROM node:16
+
+ARG NODE_ENV
 
 WORKDIR /usr
 
@@ -10,4 +14,4 @@ ADD . .
 
 EXPOSE 8081
 
-CMD ["node", "dist"]
+CMD ["./node_modules/.bin/cross-env", "NODE_ENV", "=", "$NODE_ENV", "node", "dist"]
