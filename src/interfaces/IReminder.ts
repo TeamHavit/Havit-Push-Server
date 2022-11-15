@@ -1,8 +1,25 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 export interface IReminder {
-    userId: mongoose.Schema.Types.ObjectId;
-    ogTitle: String;
-    ogImage: String;
-    time: Date;
+  userId: mongoose.Schema.Types.ObjectId;
+  contentId: Number;
+  ogTitle: String;
+  ogImage: String;
+  url: String;
+  isSeen: Boolean;
+  time: Date;
+}
+
+export interface IReminderUpdateDTO {
+  contentId: Number;
+  time: Date;
+}
+
+export interface ReminderTitleUpdateDto {
+  contentId: Number;
+  ogTitle: string;
+}
+
+export interface IReminderDeleteDTO {
+  contentId: Number;
 }

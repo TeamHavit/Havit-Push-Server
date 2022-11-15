@@ -1,4 +1,5 @@
 export interface IUser {
-    email: String;
-    fcmToken: String;
+  fcmToken: String;
 }
+
+export interface UserTokenUpdateDto extends IUser {}

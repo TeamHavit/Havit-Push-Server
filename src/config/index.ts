@@ -1,31 +1,16 @@
-import dotenv from "dotenv";
- 
-// Set the NODE_ENV to 'development' by default
-process.env.NODE_ENV = process.env.NODE_ENV || "development";
+import dotenv from 'dotenv';
+
+const isDevelopment: boolean = process.env.NODE_ENV !== 'production';
 
 const envFound = dotenv.config();
-if (envFound.error) {
-  // This error should crash whole process
 
+if (envFound.error) {
   throw new Error("⚠️  Couldn't find .env file  ⚠️");
 }
 
 export default {
-  /**
-   * Your favorite port
-   */
   port: parseInt(process.env.PORT, 10),
-
-  /**
-   * That long string from mlab
-   */
-  mongoURI: process.env.MONGODB_URI,
-
-  /**
-   * Your secret sauce
-
-  jwtSecret: process.env.JWT_SECRET,
-  jwtAlgorithm: process.env.JWT_ALGO,
-  **/
-
+  mongoURI: isDevelopment
+    ? process.env.MONGODB_URI_PROD
+    : process.env.MONGODB_URI_DEV,
 };
