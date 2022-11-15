@@ -1,8 +1,8 @@
-name: havit-server-dev
+name: havit-server-prod
 
 on:
   push:
-    branches: [develop]
+    branches: [main]
 
 jobs:
   build:
@@ -41,7 +41,7 @@ jobs:
           echo AWS_ACCESS_KEY_ID_PROD=${{ secrets.AWS_ACCESS_KEY_ID_PROD }} >> .env
           echo AWS_SECRET_ACCESS_KEY_PROD=${{ secrets.AWS_SECRET_ACCESS_KEY_PROD }} >> .env
           echo REGION=${{ secrets.REGION }} >> .env
-          echo DOCKERFILE=Dockerfile.dev >> .env
+          echo DOCKERFILE=Dockerfile >> .env
           cat .env
 
       - name: create-json
@@ -49,7 +49,7 @@ jobs:
         uses: jsdaniell/create-json@v1.2.1
         with:
           name: 'fcm-admin-credentials.json'
-          json: ${{ secrets.FIREBASE_JSON_DEV }}
+          json: ${{ secrets.FIREBASE_JSON_PROD }}
           dir: 'src/'
 
       - name: Install dependencies
@@ -58,7 +58,7 @@ jobs:
         run: yarn build
 
       - name: Build the Docker image
-        run: docker build -t havit/havit-server-dev -f Dockerfile.dev .
+        run: docker build -t havit/havit-server-prod -f Dockerfile .
 
       - name: Generate Deployment Package
         run: zip -r deploy.zip *
@@ -82,11 +82,11 @@ jobs:
       - name: Deploy to EB
         uses: einaregilsson/beanstalk-deploy@v14
         with:
-          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID_DEV }}
-          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }}
-          application_name: havit-server-dev
-          environment_name: Havitserverdev-env
-          version_label: 'havit-server-dev${{ steps.format-time.outputs.replaced }}'
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID_PROD }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY_PROD }}
+          application_name: havit-server-prod
+          environment_name: Havitserverprod-env
+          version_label: 'havit-server-prod${{ steps.format-time.outputs.replaced }}'
           region: ${{ secrets.REGION }}
           deployment_package: deploy.zip
 
@@ -97,5 +97,5 @@ jobs:
           author_name: Github Action Push Server
           fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DEV }} # required
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_PROD }} # required
         if: always() # Pick up events even if the job fails or is canceled.

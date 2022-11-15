@@ -8,3 +8,4 @@ services:
       dockerfile: ${DOCKERFILE}
     ports:
       - '80:8081'
+      - '443:8081'
