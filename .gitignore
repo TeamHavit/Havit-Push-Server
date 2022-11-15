@@ -147,3 +147,5 @@ fcm-admin-credentials.json
 src/config/*.json
 
 .vscode
+
+.DS_Store
