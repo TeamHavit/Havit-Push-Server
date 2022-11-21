@@ -144,6 +144,7 @@ dist
 
 # End of https://www.toptal.com/developers/gitignore/api/node
 fcm-admin-credentials.json
+havit-production-6f79d968ce57.json
 src/config/*.json
 
 .vscode
