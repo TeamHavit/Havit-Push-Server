@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import { UserTokenUpdateDto } from '../interfaces/IUser';
+import { isValidObjectId } from '../modules/checkObjectIdValidation';
 import { userService } from '../services';
 const sc = require('../modules/statusCode');
 const util = require('../modules/util');
@@ -69,7 +70,46 @@ const updateUserToken = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ *  @route DELETE /user/{userId}
+ *  @desc delete user
+ *  @access Public
+ */
+const deleteUser = async (
+  req: Request,
+  res: Response,
+): Promise<void | Response> => {
+  const { userId } = req.params;
+
+  const isValidId = isValidObjectId(userId);
+  if (!isValidId) {
+    return res
+      .status(sc.BAD_REQUEST)
+      .send(util.fail(sc.BAD_REQUEST, responseMessage.BAD_REQUEST));
+  }
+  try {
+    const deleteCount = await userService.deleteUser(userId);
+    if (!deleteCount) {
+      return res
+        .status(sc.NOT_FOUND)
+        .send(util.fail(sc.NOT_FOUND, responseMessage.NOT_FOUND));
+    }
+
+    res.status(sc.NO_CONTENT).send();
+  } catch (error) {
+    console.log(error);
+    res
+      .status(sc.INTERNAL_SERVER_ERROR)
+      .send(
+        util.fail(
+          sc.INTERNAL_SERVER_ERROR,
+          responseMessage.INTERNAL_SERVER_ERROR,
+        ),
+      );
+  }
+};
 export default {
   registerUser,
   updateUserToken,
+  deleteUser,
 };
