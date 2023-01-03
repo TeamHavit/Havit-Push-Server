@@ -70,7 +70,9 @@ const connectDB = async () => {
               'mutable-content': 1,
             },
           },
-          image: reminder.ogImage as string,
+          fcm_options: {
+            image: reminder.ogImage as string,
+          },
         },
         token: reminder.userId['fcmToken'],
       };
