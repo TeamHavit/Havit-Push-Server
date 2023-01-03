@@ -38,7 +38,25 @@ const updateUserToken = async (
   }
 };
 
+const deleteUser = async (userId: string): Promise<void | Object> => {
+  try {
+    const user = await User.findById(userId);
+    if (!user) return undefined;
+
+    const filter = {
+      _id: userId,
+    };
+
+    const result = await User.deleteOne(filter);
+
+    return result;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
 export default {
   createUser,
   updateUserToken,
+  deleteUser,
 };
