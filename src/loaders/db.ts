@@ -66,7 +66,6 @@ const connectDB = async () => {
                 isSeen: reminder.isSeen.toString(),
               },
               category: 'havit',
-              'thread-id': '5280',
               'mutable-content': 1,
             },
           },
