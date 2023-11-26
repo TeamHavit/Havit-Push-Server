@@ -1,0 +1,85 @@
+name: havit-server-test
+
+on:
+  push:
+    branches: [feature/48]
+
+jobs:
+  build:
+    env:
+      PORT: ${{ secrets.PORT }}
+      MONGODB_URI_DEV: ${{ secrets.MONGODB_URI_DEV }}
+      MONGODB_URI_PROD: ${{ secrets.MONGODB_URI_PROD }}
+      REGION: ${{ secrets.REGION }}
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Create .env file
+        run: |
+          touch .env
+          echo MONGODB_URI_DEV=${{ secrets.MONGODB_URI_DEV }} >> .env
+          echo MONGODB_URI_PROD=${{ secrets.MONGODB_URI_PROD }} >> .env
+          echo PORT=${{ secrets.PORT }} >> .env
+          echo DOCKERFILE=Dockerfile.dev >> .env
+          cat .env
+
+      - name: create-json
+        id: create-json
+        uses: jsdaniell/create-json@v1.2.1
+        with:
+          name: 'fcm-admin-credentials.json'
+          json: ${{ secrets.FIREBASE_JSON_DEV }}
+          dir: 'src/'
+
+      - name: Install dependencies
+        run: yarn
+      - name: Run build
+        run: yarn build
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{secrets.DOCKER_HUB_USERNAME}}
+          password: ${{secrets.DOCKER_HUB_TOKEN}}
+
+      - name: build and release to DockerHub
+        env:
+          NAME: ${{secrets.DOCKER_HUB_USERNAME}}
+          REPO: havit-push
+        run: |
+          docker build -t $REPO -f Dockerfile.dev .
+          docker tag $REPO:latest $NAME/$REPO:latest
+          docker push $NAME/$REPO:latest
+
+      - name: Run Deploy Script
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_IP }}
+          username: ${{ secrets.REMOTE_SSH_ID }}
+          key: ${{ secrets.REMOTE_SSH_KEY }}
+          port: ${{ secrets.REMOTE_SSH_PORT }}
+          script: |
+            sudo su
+            bash /opt/havit/docker/deploy.sh
+
+      - name: action-slack
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          author_name: Github Action Push Server
+          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DEV }} # required
+        if: always() # Pick up events even if the job fails or is canceled.
