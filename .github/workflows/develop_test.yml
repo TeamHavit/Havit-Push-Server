@@ -54,14 +54,18 @@ jobs:
           username: ${{secrets.DOCKER_HUB_USERNAME}}
           password: ${{secrets.DOCKER_HUB_TOKEN}}
 
-      - name: build and release to DockerHub
+      - name: build and tagging release to DockerHub
         env:
           NAME: ${{secrets.DOCKER_HUB_USERNAME}}
           REPO: havit-push
         run: |
           docker build -t $REPO -f Dockerfile.dev .
-          docker tag $REPO:latest $NAME/$REPO:latest
+          docker tag $REPO:latest $NAME/#$REPO:latest
+          docker tag $REPO:latest $NAME/$REPO:dev
+          docker tag $REPO:latest $NAME/$REPO:${{steps.current-time.outputs.formattedTime}}
           docker push $NAME/$REPO:latest
+          docker push $NAME/$REPO:dev
+          docker push $NAME/$REPO:${{steps.current-time.outputs.formattedTime}}
 
       - name: Run Deploy Script
         uses: appleboy/ssh-action@master
@@ -72,7 +76,7 @@ jobs:
           port: ${{ secrets.REMOTE_SSH_PORT }}
           script: |
             sudo su
-            bash /opt/havit/docker/deploy.sh
+            bash /opt/havit/docker/deploy-dev.sh
 
       - name: action-slack
         uses: 8398a7/action-slack@v3
