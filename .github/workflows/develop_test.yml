@@ -60,7 +60,7 @@ jobs:
           REPO: havit-push
         run: |
           docker build -t $REPO -f Dockerfile.dev .
-          docker tag $REPO:latest $NAME/#$REPO:latest
+          docker tag $REPO:latest $NAME/$REPO:latest
           docker tag $REPO:latest $NAME/$REPO:dev
           docker tag $REPO:latest $NAME/$REPO:${{steps.current-time.outputs.formattedTime}}
           docker push $NAME/$REPO:latest
