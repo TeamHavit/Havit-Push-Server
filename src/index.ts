@@ -20,8 +20,11 @@ app.use(function (err, req, res, next) {
   res.render('error');
 });
 
+const port =
+  process.env.NODE_ENV === 'dev' ? process.env.DEV_PORT : process.env.PORT;
+
 app
-  .listen(process.env.PORT, () => {
+  .listen(port, () => {
     console.log(`
     ################################################
           🛡️  Server listening on port 🛡️

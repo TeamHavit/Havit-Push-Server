@@ -32,6 +32,7 @@ jobs:
           echo MONGODB_URI_DEV=${{ secrets.MONGODB_URI_DEV }} >> .env
           echo MONGODB_URI_PROD=${{ secrets.MONGODB_URI_PROD }} >> .env
           echo PORT=${{ secrets.PORT }} >> .env
+          echo DEV_PORT=${{ secret.DEV_PORT }} >> .env
           echo DOCKERFILE=Dockerfile.dev >> .env
           cat .env
 
@@ -76,8 +77,7 @@ jobs:
           key: ${{ secrets.REMOTE_SSH_KEY }}
           port: ${{ secrets.REMOTE_SSH_PORT }}
           script: |
-            sudo su
-            /opt/havit/docker/deploy.sh dev
+            sudo /opt/havit/docker/deploy.sh dev
 
       - name: action-slack
         uses: 8398a7/action-slack@v3
