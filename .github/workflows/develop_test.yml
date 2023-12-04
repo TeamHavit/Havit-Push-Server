@@ -32,7 +32,7 @@ jobs:
           echo MONGODB_URI_DEV=${{ secrets.MONGODB_URI_DEV }} >> .env
           echo MONGODB_URI_PROD=${{ secrets.MONGODB_URI_PROD }} >> .env
           echo PORT=${{ secrets.PORT }} >> .env
-          echo DEV_PORT=${{ secret.DEV_PORT }} >> .env
+          echo DEV_PORT=${{ secrets.DEV_PORT }} >> .env
           echo DOCKERFILE=Dockerfile.dev >> .env
           cat .env
 
