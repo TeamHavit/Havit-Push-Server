@@ -59,13 +59,14 @@ jobs:
           NAME: ${{secrets.DOCKER_HUB_USERNAME}}
           REPO: havit-push
         run: |
+          shortHash=$(git rev-parse --short ${{ github.sha }})
           docker build -t $REPO -f Dockerfile.dev .
           docker tag $REPO:latest $NAME/$REPO:latest
           docker tag $REPO:latest $NAME/$REPO:dev
-          # docker tag $REPO:latest $NAME/$REPO:${{steps.current-time.outputs.formattedTime}}
+          docker tag $REPO:latest $NAME/$REPO:dev-$shortHash
           docker push $NAME/$REPO:latest
           docker push $NAME/$REPO:dev
-          # docker push $NAME/$REPO:${{steps.current-time.outputs.formattedTime}}
+          docker push $NAME/$REPO:dev-$shortHash
 
       - name: Run Deploy Script
         uses: appleboy/ssh-action@master
@@ -76,7 +77,7 @@ jobs:
           port: ${{ secrets.REMOTE_SSH_PORT }}
           script: |
             sudo su
-            bash /opt/havit/docker/deploy-dev.sh
+            /opt/havit/docker/deploy.sh dev
 
       - name: action-slack
         uses: 8398a7/action-slack@v3
