@@ -21,7 +21,9 @@ app.use(function (err, req, res, next) {
 });
 
 const port =
-  process.env.NODE_ENV === 'dev' ? process.env.DEV_PORT : process.env.PORT;
+  process.env.NODE_ENV === 'development'
+    ? process.env.DEV_PORT
+    : process.env.PORT;
 
 app
   .listen(port, () => {
