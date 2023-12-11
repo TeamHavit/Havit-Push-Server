@@ -2,7 +2,7 @@ name: havit-server-test
 
 on:
   push:
-    branches: [develop]
+    branches: [feature/48]
 
 jobs:
   build:
