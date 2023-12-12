@@ -69,15 +69,16 @@ jobs:
           docker push $NAME/$REPO:dev
           docker push $NAME/$REPO:dev-$shortHash
 
-      # - name: Run Deploy Script
-      #   uses: appleboy/ssh-action@master
-      #   with:
-      #     host: ${{ secrets.REMOTE_IP }}
-      #     username: ${{ secrets.REMOTE_SSH_ID }}
-      #     key: ${{ secrets.REMOTE_SSH_KEY }}
-      #     port: ${{ secrets.REMOTE_SSH_PORT }}
-      #     script: |
-      #       sudo /opt/havit/docker/deploy.sh dev
+      - name: Run Deploy Script
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_IP }}
+          username: ${{ secrets.REMOTE_SSH_ID }}
+          key: ${{ secrets.REMOTE_SSH_KEY }}
+          port: ${{ secrets.REMOTE_SSH_PORT }}
+          script: |
+            cd /opt/havit/docker
+            sudo /opt/havit/docker/dev-deploy.sh
 
       - name: action-slack
         uses: 8398a7/action-slack@v3
