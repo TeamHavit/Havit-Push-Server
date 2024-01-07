@@ -1,4 +1,4 @@
-name: havit-server-test
+name: havit-server-dev
 
 on:
   push:
