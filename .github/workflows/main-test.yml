@@ -41,7 +41,7 @@ jobs:
         uses: jsdaniell/create-json@v1.2.1
         with:
           name: 'fcm-admin-credentials.json'
-          json: ${{ secrets.FIREBASE_JSON_DEV }}
+          json: ${{ secrets.FIREBASE_JSON_PROD }}
           dir: 'src/'
 
       - name: Install dependencies
@@ -69,16 +69,16 @@ jobs:
           docker push $NAME/$REPO:prod
           docker push $NAME/$REPO:prod-$shortHash
 
-      # - name: Run Deploy Script
-      #   uses: appleboy/ssh-action@master
-      #   with:
-      #     host: ${{ secrets.REMOTE_IP }}
-      #     username: ${{ secrets.REMOTE_SSH_ID }}
-      #     key: ${{ secrets.REMOTE_SSH_KEY }}
-      #     port: ${{ secrets.REMOTE_SSH_PORT }}
-      #     script: |
-      #       cd /opt/havit/docker
-      #       sudo /opt/havit/docker/deploy.sh
+      - name: Run Deploy Script
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_IP }}
+          username: ${{ secrets.REMOTE_SSH_ID }}
+          key: ${{ secrets.REMOTE_SSH_KEY }}
+          port: ${{ secrets.REMOTE_SSH_PORT }}
+          script: |
+            cd /opt/havit/docker
+            sudo /opt/havit/docker/deploy.sh
 
       - name: action-slack
         uses: 8398a7/action-slack@v3
