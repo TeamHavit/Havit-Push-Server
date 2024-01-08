@@ -10,17 +10,13 @@ jobs:
       PORT: ${{ secrets.PORT }}
       MONGODB_URI_DEV: ${{ secrets.MONGODB_URI_DEV }}
       MONGODB_URI_PROD: ${{ secrets.MONGODB_URI_PROD }}
-      AWS_ACCESS_KEY_ID_DEV: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }}
-      AWS_SECRET_ACCESS_KEY_DEV: ${{ secrets.AWS_SECRET_ACCESS_DEV }}
-      AWS_ACCESS_KEY_ID_PROD: ${{ secrets.AWS_SECRET_ACCESS_KEY_PROD }}
-      AWS_SECRET_ACCESS_KEY_PROD: ${{ secrets.AWS_SECRET_ACCESS_PROD }}
       REGION: ${{ secrets.REGION }}
 
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [18.x]
 
     steps:
       - uses: actions/checkout@v2
@@ -36,11 +32,7 @@ jobs:
           echo MONGODB_URI_DEV=${{ secrets.MONGODB_URI_DEV }} >> .env
           echo MONGODB_URI_PROD=${{ secrets.MONGODB_URI_PROD }} >> .env
           echo PORT=${{ secrets.PORT }} >> .env
-          echo AWS_ACCESS_KEY_ID_DEV=${{ secrets.AWS_ACCESS_KEY_ID_DEV }} >> .env
-          echo AWS_SECRET_ACCESS_KEY_DEV=${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }} >> .env
-          echo AWS_ACCESS_KEY_ID_PROD=${{ secrets.AWS_ACCESS_KEY_ID_PROD }} >> .env
-          echo AWS_SECRET_ACCESS_KEY_PROD=${{ secrets.AWS_SECRET_ACCESS_KEY_PROD }} >> .env
-          echo REGION=${{ secrets.REGION }} >> .env
+          echo DEV_PORT=${{ secrets.DEV_PORT }} >> .env
           echo DOCKERFILE=Dockerfile.dev >> .env
           cat .env
 
@@ -57,38 +49,36 @@ jobs:
       - name: Run build
         run: yarn build
 
-      - name: Build the Docker image
-        run: docker build -t havit/havit-server-dev -f Dockerfile.dev .
-
-      - name: Generate Deployment Package
-        run: zip -r deploy.zip *
-
-      - name: Add .env to deploy.zip
-        run: zip deploy.zip .env
-
-      - name: Get timestamp
-        uses: gerred/actions/current-time@master
-        id: current-time
-
-      - name: Run string replace
-        uses: frabert/replace-string-action@master
-        id: format-time
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
         with:
-          pattern: '[:\.]+'
-          string: '${{ steps.current-time.outputs.time }}'
-          replace-with: '-'
-          flags: 'g'
+          username: ${{secrets.DOCKER_HUB_USERNAME}}
+          password: ${{secrets.DOCKER_HUB_TOKEN}}
 
-      - name: Deploy to EB
-        uses: einaregilsson/beanstalk-deploy@v14
+      - name: build and tagging release to DockerHub
+        env:
+          NAME: ${{secrets.DOCKER_HUB_USERNAME}}
+          REPO: havit-push
+        run: |
+          shortHash=$(git rev-parse --short ${{ github.sha }})
+          docker build -t $REPO -f Dockerfile.dev .
+          docker tag $REPO:latest $NAME/$REPO:latest
+          docker tag $REPO:latest $NAME/$REPO:dev
+          docker tag $REPO:latest $NAME/$REPO:dev-$shortHash
+          docker push $NAME/$REPO:latest
+          docker push $NAME/$REPO:dev
+          docker push $NAME/$REPO:dev-$shortHash
+
+      - name: Run Deploy Script
+        uses: appleboy/ssh-action@master
         with:
-          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID_DEV }}
-          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }}
-          application_name: havit-server-dev
-          environment_name: Havitserverdev-env
-          version_label: 'havit-server-dev${{ steps.format-time.outputs.replaced }}'
-          region: ${{ secrets.REGION }}
-          deployment_package: deploy.zip
+          host: ${{ secrets.REMOTE_IP }}
+          username: ${{ secrets.REMOTE_SSH_ID }}
+          key: ${{ secrets.REMOTE_SSH_KEY }}
+          port: ${{ secrets.REMOTE_SSH_PORT }}
+          script: |
+            cd /opt/havit/docker
+            sudo /opt/havit/docker/dev-deploy.sh
 
       - name: action-slack
         uses: 8398a7/action-slack@v3
