@@ -87,5 +87,5 @@ jobs:
           author_name: Github Action Push Server
           fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DEV }} # required
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_PROD }} # required
         if: always() # Pick up events even if the job fails or is canceled.
